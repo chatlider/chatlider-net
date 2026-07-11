@@ -2,6 +2,24 @@
 ;  ChatLider Network - Kararlı Kurumsal Dağıtım v3.5
 ; =======================================================
 
+; --- ChatLider Sıkı Flood/Repeat Koruması ---
+on @*:TEXT:*:#: {
+  if ($nick == $me) { return }
+  if ($1- == %lastmsg. $+ $nick) {
+    inc %repeat.count. $+ $nick
+    if (%repeat.count. $+ $nick >= 3) {
+      mode $chan +b $nick
+      kick $chan $nick Mesaj tekrarı (spam) yaptığınız için uzaklaştırıldınız.
+      unset %repeat.count. $+ $nick
+    }
+
+  }
+  else {
+    set -u5 %lastmsg. $+ $nick $1-
+    set -u10 %repeat.count. $+ $nick 1
+  }
+} 
+
 ; --- Giriş Paneli ---
 dialog cl_giris {
   title "ChatLider Resmi Giriş Paneli"
